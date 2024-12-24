@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        #itemImage {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 4 / 3; /* Maintain 4:3 aspect ratio */
+            object-fit: cover; /* Ensure the image covers the container while maintaining the aspect ratio */
+            margin-bottom: 15px; /* Space below the image */
+        }
+        #itemDetail {
+            text-align: center; /* Center-align the content */
+        }
+        .back-button {
+            position: relative; /* Make the button's position relative to avoid overlap */
+            display: inline-block; /* Ensures proper placement */
+            background-color: black; /* Black background */
+            color: white; /* White text */
+            border: none; /* No border */
+            padding: 10px 20px; /* Padding for better appearance */
+            border-radius: 5px; /* Slightly rounded corners */
+            font-size: 14px; /* Adjust font size */
+            cursor: pointer; /* Change cursor to pointer */
+            text-transform: capitalize; /* Capitalize text */
+            font-weight: bold; /* Bold text */
+            margin-bottom: 20px; /* Add space below the button */
+        }
+        .back-button:hover {
+            background-color: #fff; /* Darker black on hover */
+            color: #333; /* Ensure text stays white */
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <!-- Back Button -->
+        <button class="back-button" onclick="goBack()">Back to Dashboard</button>
+
+        <div id="itemDetail">
+            <img id="itemImage" class="img-fluid" src="" alt="Item Image">
+            <h4 id="itemTitle" class="mt-3"></h4>
+            <p id="itemDescription" class="mt-2"></p>
+        </div>
+    </div>
+
+    <script>
+        // Function to go back to the dashboard page
+        function goBack() {
+            window.location.href = 'dashboard.html'; // Replace 'dashboard.html' with your actual dashboard URL
+        }
+
+        if (window.location.pathname.includes('detail.html')) {
+            window.addEventListener('DOMContentLoaded', function () {
+                const urlParams = new URLSearchParams(window.location.search);
+                const itemUrl = urlParams.get('id');
+
+                if (itemUrl) {
+                    fetch('https://newsapi.org/v2/everything?q=tesla&from=2024-11-24&sortBy=publishedAt&apiKey=36d9bcf955fc4c25a69509277db6476c')
+                        .then(response => response.json())
+                        .then(data => {
+                            const item = data.articles.find(article => article.url === decodeURIComponent(itemUrl));
+
+                            if (item) {
+                                document.getElementById('itemTitle').innerText = item.title || 'No title available';
+                                document.getElementById('itemDescription').innerText = item.description || 'No description available';
+                                document.getElementById('itemImage').src = item.urlToImage || 'placeholder.jpg';
+                            } else {
+                                alert('Item not found.');
+                            }
+                        })
+                        .catch(error => console.error('Error fetching data:', error));
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .alert {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Login</h2>
+        <!-- Alert Message -->
+        <div id="errorAlert" class="alert alert-danger">
+            <strong>Error!</strong> Username or password is incorrect.
+        </div>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="loginUsername">Username</label>
+                <input type="text" class="form-control" id="loginUsername" placeholder="Enter your username" required>
+            </div>
+            <div class="form-group">
+                <label for="loginPassword">Password</label>
+                <input type="password" class="form-control" id="loginPassword" placeholder="Enter your password" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Login</button>
+        </form>
+        <div class="text-center mt-3">
+            <p>Belum memiliki akun? <a href="register.html">Registrasi di sini</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Get references to the form and alert
+        const loginForm = document.getElementById('loginForm');
+        const errorAlert = document.getElementById('errorAlert');
+
+        // Get stored users from sessionStorage
+        const users = JSON.parse(sessionStorage.getItem('users')) || [];
+
+        loginForm.addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent form submission
+
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            // Check if the credentials are valid
+            const user = users.find(user => user.username === username && user.password === password);
+
+            if (user) {
+                window.location.href = 'dashboard.html';
+            } else {
+                // If login fails, show error message
+                errorAlert.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

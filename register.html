@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Register</h2>
+        <!-- Registration Form -->
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" placeholder="Enter your name" required>
+            </div>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" placeholder="Enter your username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Register</button>
+        </form>
+        <!-- Registration Success/Error Message -->
+        <div id="message" class="mt-3 text-center"></div>
+        <div class="text-center mt-3">
+            <p>Already have an account? <a href="login.html">Login here</a></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent the form from submitting
+    
+            const name = document.getElementById('name').value;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+    
+            // Retrieve existing users from sessionStorage or initialize an empty array if none exist
+            let users = JSON.parse(sessionStorage.getItem('users')) || [];
+    
+            // Check if the username already exists
+            const userExists = users.some(user => user.username === username);
+    
+            if (userExists) {
+                document.getElementById('message').textContent = 'Username already exists. Please choose a different one.';
+                document.getElementById('message').classList.add('text-danger');
+            } else {
+                // If username doesn't exist, create new user object and add to the array
+                const newUser = { name, username, password };
+                users.push(newUser);
+    
+                // Store updated users array in sessionStorage
+                sessionStorage.setItem('users', JSON.stringify(users));
+    
+                // Save user's name to localStorage for later use
+                sessionStorage.setItem('name', name);
+    
+                // Show success message and redirect to login page
+                document.getElementById('message').textContent = 'Registration successful! Redirecting to login...';
+                document.getElementById('message').classList.add('text-success');
+    
+                // Redirect to login after a delay
+                setTimeout(function () {
+                    window.location.href = 'login.html';
+                }, 2000); // Delay of 2 seconds
+            }
+        });
+    </script>
+         
+</body>
+</html>
